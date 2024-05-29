@@ -3,3 +3,6 @@ Metagenomics is a vastly advancing field within microbial sciences, it provides 
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
+## Installation
+```sh
+git clone 
