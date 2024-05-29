@@ -5,4 +5,6 @@ Metagenomics is a vastly advancing field within microbial sciences, it provides 
 - [Usage](#usage)
 ## Installation
 ```sh
+pip install metaphlan
+metaphlan --install
 git clone 
