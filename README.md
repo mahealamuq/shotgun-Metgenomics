@@ -5,6 +5,10 @@ Metagenomics is a vastly advancing field within microbial sciences, it provides 
 - [Usage](#usage)
 ## Installation
 ```sh
+#install fastqc for quality control statistics
+sudo apt update
+sudo apt install fastqc
+# install Trimmomatic for Trimming and Filtering Reads 
 pip install metaphlan
 metaphlan --install
 git clone 
