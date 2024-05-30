@@ -4,11 +4,13 @@ Metagenomics is a vastly advancing field within microbial sciences, it provides 
 - [Installation](#installation)
 - [Usage](#usage)
 ## Installation
+install fastqc for quality control statistics
 ```sh
-#install fastqc for quality control statistics
 sudo apt update
 sudo apt install fastqc
-# install Trimmomatic for Trimming and Filtering Reads
+```
+install Trimmomatic for Trimming and Filtering Reads
+```sh
 sudo apt update
 sudo apt install default-jdk
 wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
@@ -18,7 +20,9 @@ sudo ln -s /opt/Trimmomatic-0.39/trimmomatic-0.39.jar /usr/local/bin/trimmomatic
 sudo ln -s /opt/Trimmomatic-0.39/trimmomatic-0.39.jar /usr/local/bin/trimmomatic.jar
 #Verify Installation: Verify that Trimmomatic is accessible by checking its version. You can run the following command:
 java -jar /usr/local/bin/trimmomatic.jar
-#install metaphlan for taxonomic classification
+```
+install metaphlan for taxonomic classification
+```sh
 pip install metaphlan
 metaphlan --install
 git clone 
