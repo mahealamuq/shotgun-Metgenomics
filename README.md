@@ -36,4 +36,4 @@ cd bbmap/
 ```sh
 pip install metaphlan
 metaphlan --install
-git clone 
+git clone https://github.com/mahealamuq/shotgun-Metgenomics/blob/main/upstream_analysis.sh
