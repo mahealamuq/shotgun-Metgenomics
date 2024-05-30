@@ -4,12 +4,12 @@ Metagenomics is a vastly advancing field within microbial sciences, it provides 
 - [Installation](#installation)
 - [Usage](#usage)
 ## Installation
-Install fastqc for quality control statistics
+### Install fastqc for quality control statistics
 ```sh
 sudo apt update
 sudo apt install fastqc
 ```
-Install Trimmomatic for Trimming and Filtering Reads
+### Install Trimmomatic for Trimming and Filtering Reads
 ```sh
 sudo apt update
 sudo apt install default-jdk
@@ -21,7 +21,7 @@ sudo ln -s /opt/Trimmomatic-0.39/trimmomatic-0.39.jar /usr/local/bin/trimmomatic
 #Verify Installation: Verify that Trimmomatic is accessible by checking its version. You can run the following command:
 java -jar /usr/local/bin/trimmomatic.jar
 ```
-Removing Host Derived Content
+### Removing Host Derived Content
 A large portion of DNA and RNA content in metagenomics samples obtained from host derived. It is advisable to delete host sequences from samples. There are many tools for this job, but I use BBDuck from the BBTools suite. In this case, we will use a reference genome for cattle (bos taurus) from NCBI and download it using wget command:
 ```sh
 Wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/263/795/GCA_002263795.4_ARS-UCD2.0/GCA_002263795.4_ARS-UCD2.0_genomic.fna.gz
@@ -32,7 +32,7 @@ rm bbtools.tar.gz
 cd bbmap/
 ./bbduk.sh -h
 ```
-Install metaphlan for taxonomic classification
+### Install metaphlan for taxonomic classification
 ```sh
 pip install metaphlan
 metaphlan --install
