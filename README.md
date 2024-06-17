@@ -16,7 +16,7 @@ For upstream analysis
 - Ubuntu (or any Debian-based Linux distribution)
 - Internet connection (to download data and tools)
 - Sufficient disk space for storing sequence data
-For 
+For Downstream analysis
 - R studio
 ## Installation
 
