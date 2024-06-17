@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+# Import the modules needed throughout the script
+import glob
+import re
+
+# Find all input files to process
+input_files = glob.glob("*_R1_depleted.fastq")
+
+# Prepare a list of output files expected based on our input list
+output_files = [re.sub('_R1_depleted.fastq', '_mph.tsv', file) for file in input_files]
+
+# Debugging output
+print("Input files:", input_files)
+print("Output files:", output_files)
+
+rule all:
+    input:
+        output_files
+
+rule run_metaphlan:
+    input:
+        R1="{sample}_R1_depleted.fastq",
+        R2="{sample}_R2_depleted.fastq"
+    output:
+        out="{sample}_mph.tsv",
+        bwtout="{sample}_bowtie.bz"
+    shell:
+        """
+        metaphlan {input.R1},{input.R2} --input_type fastq --tax_lev g -o {output.out} \
+        --sample_id_key {wildcards.sample} --bowtie2out {output.bwtout}
+        """
