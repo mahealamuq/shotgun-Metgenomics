@@ -144,5 +144,70 @@ The script performs the following steps to process shotgun metagenomics data:
       merge_metaphlan_tables.py *_profile.txt > all_final_metaphlan_genera.tsv
       ```
 
+### Additional Steps for Running Trimmomatic and MetaPhlAn
+
+1. **Ensure adapter sequence files are available**:
+    - Adapter sequence files such as `NexteraPE-PE.fa` are downloaded from the Trimmomatic GitHub repository:
+      ```bash
+      wget https://github.com/usadellab/Trimmomatic/raw/master/adapters/NexteraPE-PE.fa
+      ```
+
+2. **Trimming reads with Trimmomatic**:
+    - The script runs `quality_trim.sh` for each pair of FastQ files to trim adapters and low-quality bases. The `quality_trim.sh` script should contain commands similar to the following:
+      ```bash
+      java -jar Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 \
+      input_R1.fastq.gz input_R2.fastq.gz \
+      output_R1_paired.fastq.gz output_R1_unpaired.fastq.gz \
+      output_R2_paired.fastq.gz output_R2_unpaired.fastq.gz \
+      ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 SLIDINGWINDOW:4:20 MINLEN:50
+      ```
+
+3. **Running bbduk.sh with BBTools**:
+    - BBTools' `bbduk.sh` is used to remove host-derived sequences using the cattle reference genome. The parameters include a memory allocation of 50 GB and a minimum coverage fraction of 0.5:
+      ```bash
+      bbduk.sh in=output_R1_paired.fastq.gz in2=output_R2_paired.fastq.gz \
+      out=output_R1_clean.fastq.gz out2=output_R2_clean.fastq.gz \
+      ref=Bos_taurus.ARS-UCD1.2.dna.toplevel.fa.gz k=31 hdist=1 stats=stats.txt
+      ```
+
+4. **Unzip depleted FastQ files**:
+    - The depleted FastQ files are unzipped for further processing:
+      ```bash
+      gunzip output_R1_clean.fastq.gz
+      gunzip output_R2_clean.fastq.gz
+      ```
+
+5. **Running Snakemake for MetaPhlAn analysis**:
+    - Snakemake is used with the provided `mph.snake` Snakefile to perform the MetaPhlAn analysis. Ensure the `mph.snake` file is correctly set up to process the cleaned FastQ files:
+      ```bash
+      snakemake -s mph.snake --cores 4
+      ```
+
+6. **Merging MetaPhlAn tables**:
+    - The final MetaPhlAn output tables are merged into `all_final_metaphlan_genera.tsv` using the provided merge script:
+      ```bash
+      merge_metaphlan_tables.py *_profile.txt > all_final_metaphlan_genera.tsv
+      ```
+
 By following these steps, the script processes shotgun metagenomics data from downloading raw sequence data to generating taxonomic profiles. Each step is designed to ensure data quality and accurate taxonomic assignment.
+
+## Output
+
+- **Quality Control Reports**:
+    FastQC reports are stored in the `fastQC_results` directory.
+    
+- **Trimmed and Host-Depleted Reads**:
+    Trimmed and host-depleted FastQ files are generated.
+
+- **Taxonomic Profiles**:
+    A merged table of taxonomic profiles is generated as `all_final_metaphlan_genera.tsv`.
+
+## Contributing
+
+Please feel free to submit issues or pull requests to improve this script or add new features.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
 
