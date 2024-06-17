@@ -11,11 +11,11 @@ This repository contains a Bash script for processing shotgun metagenomics data.
 - [License](#license)
 
 ## Requirements
-### For upstream analysis
+#### For upstream analysis
 - Ubuntu (or any Debian-based Linux distribution)
 - Internet connection (to download data and tools)
 - Sufficient disk space for storing sequence data
-### For Downstream analysis
+#### For Downstream analysis
 - R studio
 ## Installation
 
