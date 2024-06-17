@@ -39,6 +39,7 @@ Run the script with the following command:
 ```bash
 ./upstream_analysis.sh
 ```
+The script will automatically perform the following steps.
 ## Pipeline Steps
 
 The script performs the following steps to process shotgun metagenomics data:
