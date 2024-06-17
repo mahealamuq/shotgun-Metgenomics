@@ -18,6 +18,14 @@ For upstream analysis
 - Sufficient disk space for storing sequence data
 For 
 - R studio
+## Installation
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/yourusername/shotgun-metagenomics-pipeline.git
+    cd shotgun-metagenomics-pipeline
+    ```
+
 2. **Make the script executable**:
     ```bash
     chmod +x upstream_analysis.sh
@@ -31,6 +39,7 @@ For
 Run the script with the following command:
 ```bash
 ./upstream_analysis.sh
+```
 ## Installation
 ### Install fastqc for quality control statistics
 ```sh
