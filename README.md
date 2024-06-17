@@ -21,8 +21,8 @@ This repository contains a Bash script for processing shotgun metagenomics data.
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/shotgun-metagenomics-pipeline.git
-    cd shotgun-metagenomics-pipeline
+    git clone https://github.com/mahealamuq/shotgun-Metgenomics.git
+    cd shotgun-metagenomics
     ```
 
 2. **Make the script executable**:
@@ -48,7 +48,10 @@ The script performs the following steps to process shotgun metagenomics data:
     - The script creates a directory called `shotgun_metagenomics` and changes to this directory to organize all subsequent data processing.
 
 2. **Update system packages**:
-    - Ensures that the system's package list is up to date by running `sudo apt-get update`.
+    - Ensures that the system's package list is up to date by running
+   ```bash
+      sudo apt-get update
+   ```
 
 3. **Install necessary dependencies**:
     - Installs essential libraries for the subsequent tools:
