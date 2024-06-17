@@ -189,7 +189,7 @@ The script performs the following steps to process shotgun metagenomics data:
 6. **Merging MetaPhlAn tables**:
     - The final MetaPhlAn output tables are merged into `all_final_metaphlan_genera.tsv` using the provided merge script:
       ```bash
-      merge_metaphlan_tables.py *_profile.txt > all_final_metaphlan_genera.tsv
+      merge_metaphlan_tables.py *_profile.tsv > all_metaphlan_genera.tsv
       ```
 
 By following these steps, the script processes shotgun metagenomics data from downloading raw sequence data to generating taxonomic profiles. Each step is designed to ensure data quality and accurate taxonomic assignment.
