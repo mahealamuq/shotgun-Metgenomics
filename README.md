@@ -40,37 +40,109 @@ Run the script with the following command:
 ```bash
 ./upstream_analysis.sh
 ```
-## Installation
-### Install fastqc for quality control statistics
-```sh
-sudo apt update
-sudo apt install fastqc
-```
-### Install Trimmomatic for Trimming and Filtering Reads
-```sh
-sudo apt update
-sudo apt install default-jdk
-wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
-sudo unzip Trimmomatic-0.39.zip -d /opt
-sudo ln -s /opt/Trimmomatic-0.39/trimmomatic-0.39.jar /usr/local/bin/trimmomatic.jar
-#Create a Symbolic Link: To make it easier to run Trimmomatic from anywhere, create a symbolic link to the trimmomatic-0.39.jar file in a directory that is included #in your PATH, such as /usr/local/bin
-sudo ln -s /opt/Trimmomatic-0.39/trimmomatic-0.39.jar /usr/local/bin/trimmomatic.jar
-#Verify Installation: Verify that Trimmomatic is accessible by checking its version. You can run the following command:
-java -jar /usr/local/bin/trimmomatic.jar
-```
-### Removing Host Derived Content
-A large portion of DNA and RNA content in metagenomics samples obtained from host derived. It is advisable to delete host sequences from samples. There are many tools for this job, but I use BBDuck from the BBTools suite. In this case, we will use a reference genome for cattle (bos taurus) from NCBI and download it using wget command:
-```sh
-Wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/263/795/GCA_002263795.4_ARS-UCD2.0/GCA_002263795.4_ARS-UCD2.0_genomic.fna.gz
-mkdir ~/bbtools
-wget https://sourceforge.net/projects/bbmap/files/latest/download -O bbtools.tar.gz
-tar -xzf bbtools.tar.gz
-rm bbtools.tar.gz
-cd bbmap/
-./bbduk.sh -h
-```
-### Install metaphlan for taxonomic classification
-```sh
-pip install metaphlan
-metaphlan --install
-git clone https://github.com/mahealamuq/shotgun-Metgenomics/blob/main/upstream_analysis.sh
+## Pipeline Steps
+
+The script performs the following steps to process shotgun metagenomics data:
+
+1. **Create a directory for shotgun metagenomics data**:
+    - The script creates a directory called `shotgun_metagenomics` and changes to this directory to organize all subsequent data processing.
+
+2. **Update system packages**:
+    - Ensures that the system's package list is up to date by running `sudo apt-get update`.
+
+3. **Install necessary dependencies**:
+    - Installs essential libraries for the subsequent tools:
+      ```bash
+      sudo apt-get install libxml2-dev libncurses5-dev
+      ```
+
+4. **Download and set up the SRA Toolkit**:
+    - Downloads the SRA Toolkit, extracts it, and adds it to the system `PATH` to allow for easy access to its utilities:
+      ```bash
+      wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+      tar -xzvf sratoolkit.current-ubuntu64.tar.gz
+      export PATH=$PATH:$(pwd)/sratoolkit.current-ubuntu64/bin
+      ```
+
+5. **Download sequence data**:
+    - Uses `prefetch` from the SRA Toolkit to download sequence data specified by SRA accession numbers.
+
+6. **Convert SRA files to FastQ format**:
+    - Converts downloaded SRA files to FastQ format using `fastq-dump`:
+      ```bash
+      fastq-dump --split-files <SRA_accession>
+      ```
+
+7. **Rename FastQ files**:
+    - Renames the FastQ files based on sample information for better clarity.
+
+8. **Compress FastQ files**:
+    - Compresses the FastQ files to save disk space:
+      ```bash
+      gzip *.fastq
+      ```
+
+9. **Remove original SRA files**:
+    - Deletes the original SRA files to free up disk space:
+      ```bash
+      rm *.sra
+      ```
+
+10. **Quality control with FastQC**:
+    - Runs FastQC on all FastQ files to generate quality control reports:
+      ```bash
+      fastqc *.fastq.gz -o fastQC_results/
+      ```
+
+11. **Install and set up Trimmomatic**:
+    - Downloads and sets up Trimmomatic for adapter trimming:
+      ```bash
+      wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+      unzip Trimmomatic-0.39.zip
+      ```
+
+12. **Trim adapters**:
+    - Uses `quality_trim.sh` to trim adapters from the reads with Trimmomatic:
+      ```bash
+      ./quality_trim.sh input.fastq.gz output.trimmed.fastq.gz
+      ```
+
+13. **Download the reference genome**:
+    - Downloads the Bos taurus (cattle) reference genome to remove host DNA:
+      ```bash
+      wget ftp://ftp.ensembl.org/pub/release-100/fasta/bos_taurus/dna/Bos_taurus.ARS-UCD1.2.dna.toplevel.fa.gz
+      ```
+
+14. **Install and set up BBTools**:
+    - Installs BBTools and sets up `bbduk.sh` for host DNA removal:
+      ```bash
+      sudo apt-get install bbmap
+      ```
+
+15. **Remove host-derived sequences**:
+    - Uses `bbduk.sh` to remove host-derived sequences:
+      ```bash
+      bbduk.sh in=input.fastq.gz out=output.cleaned.fastq.gz ref=Bos_taurus.ARS-UCD1.2.dna.toplevel.fa.gz
+      ```
+
+16. **Install MetaPhlAn and dependencies**:
+    - Installs MetaPhlAn and its dependencies including Bowtie2, PuLP, and Snakemake:
+      ```bash
+      pip install metaphlan
+      conda install -c bioconda bowtie2 pulp snakemake
+      ```
+
+17. **Taxonomic profiling with MetaPhlAn**:
+    - Runs MetaPhlAn for taxonomic profiling of the sequences:
+      ```bash
+      metaphlan input.cleaned.fastq.gz --bowtie2out output.bowtie2.bz2 --nproc 4 > output_profile.txt
+      ```
+
+18. **Merge MetaPhlAn tables**:
+    - Merges the MetaPhlAn output tables into a final table:
+      ```bash
+      merge_metaphlan_tables.py *_profile.txt > all_final_metaphlan_genera.tsv
+      ```
+
+By following these steps, the script processes shotgun metagenomics data from downloading raw sequence data to generating taxonomic profiles. Each step is designed to ensure data quality and accurate taxonomic assignment.
+
